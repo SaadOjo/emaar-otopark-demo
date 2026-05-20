@@ -1,12 +1,13 @@
 import { ChevronRight, Edit3, Expand, RefreshCcw, Wifi } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { EmptyState } from '../../components/ui/EmptyState'
 import { otoparkRepository } from '../../data/repository'
 import type { DigitalSignage, Floor, ParkingBlock } from '../../domain/types'
 
 export function SignageDetailPage() {
   const { signageId = '' } = useParams()
+  const { pathname } = useLocation()
   const [signage, setSignage] = useState<DigitalSignage>()
   const [floor, setFloor] = useState<Floor>()
   const [block, setBlock] = useState<ParkingBlock>()
@@ -25,6 +26,8 @@ export function SignageDetailPage() {
 
   if (!signage) return <EmptyState title="Digital signage not found" />
 
+  const inSignageTab = pathname.startsWith('/signage')
+
   function handleRefresh() {
     setRefreshing(true)
     window.setTimeout(() => setRefreshing(false), 700)
@@ -34,12 +37,25 @@ export function SignageDetailPage() {
     <section className="signage-detail-page">
       <header className="detail-topbar">
         <nav className="breadcrumbs">
-          <Link to={`/floors/${signage.floorId}`}>Floor Maps</Link>
-          <ChevronRight size={14} />
-          <Link to={`/floors/${signage.floorId}`}>{floor?.label ?? signage.floorId}</Link>
-          <ChevronRight size={14} />
-          {block && <><Link to={`/floors/${signage.floorId}/blocks/${block.id}`}>{block.name}</Link><ChevronRight size={14} /></>}
-          <span>Digital Signage ({signage.id})</span>
+          {inSignageTab ? (
+            <>
+              <Link to="/signage">Digital Signage</Link>
+              <ChevronRight size={14} />
+              <Link to={`/floors/${signage.floorId}`}>{floor?.label ?? signage.floorId}</Link>
+              {block && <><ChevronRight size={14} /><span>{block.name}</span></>}
+              <ChevronRight size={14} />
+              <span>{signage.id}</span>
+            </>
+          ) : (
+            <>
+              <Link to={`/floors/${signage.floorId}`}>Floor Maps</Link>
+              <ChevronRight size={14} />
+              <Link to={`/floors/${signage.floorId}`}>{floor?.label ?? signage.floorId}</Link>
+              <ChevronRight size={14} />
+              {block && <><Link to={`/floors/${signage.floorId}/blocks/${block.id}`}>{block.name}</Link><ChevronRight size={14} /></>}
+              <span>Digital Signage ({signage.id})</span>
+            </>
+          )}
         </nav>
       </header>
 

@@ -13,6 +13,7 @@ export function BlockMapPage() {
   const navigate = useNavigate()
   const [floor, setFloor] = useState<Floor>()
   const [block, setBlock] = useState<ParkingBlock>()
+  const [blocks, setBlocks] = useState<ParkingBlock[]>([])
   const [spots, setSpots] = useState<ParkingSpot[]>([])
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [signage, setSignage] = useState<DigitalSignage[]>([])
@@ -21,6 +22,7 @@ export function BlockMapPage() {
   useEffect(() => {
     if (!floorId) return
     otoparkRepository.getFloor(floorId).then(setFloor)
+    otoparkRepository.listBlocks(floorId).then(setBlocks)
     otoparkRepository.getBlock(floorId, blockId).then(setBlock)
     otoparkRepository.listSpots(floorId, blockId).then(setSpots)
     otoparkRepository.listVehicles(floorId, blockId).then(setVehicles)
@@ -59,21 +61,28 @@ export function BlockMapPage() {
           <ChevronRight size={14} />
           <Link to={`/floors/${floorId}`}>{floor?.label ?? floorId}</Link>
           <ChevronRight size={14} />
-          <span>{block.name}</span>
+          <div className="select-wrap breadcrumb-select-wrap">
+            <select value={block.id} onChange={(event) => navigate(`/floors/${floorId}/blocks/${event.target.value}`)} aria-label="Select block">
+              {blocks.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+            </select>
+          </div>
         </nav>
 
         <div className="block-canvas">
           <div className="dot-grid" />
           <section className="roadway">
-            <div className="lane-lines"><i /><i /><i /><i /></div>
+            <div className="lane-lines" aria-hidden="true"><i /><i /><i /><i /></div>
             {signage.slice(0, 2).map((item, index) => (
               <button
                 className={`road-sign road-sign--${index === 0 ? 'top' : 'bottom'}`}
                 key={item.id}
                 onClick={() => navigate(`/floors/${item.floorId}/blocks/${item.blockId ?? blockId}/signage/${item.id}`)}
               >
-                <Monitor size={20} />
-                <span>{item.id}</span>
+                <i className="road-sign-pole" />
+                <span className="road-sign-screen">
+                  <Monitor size={16} />
+                  <strong>{item.id}</strong>
+                </span>
               </button>
             ))}
           </section>

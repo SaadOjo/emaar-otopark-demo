@@ -11,7 +11,7 @@ export const mockBlocks: ParkingBlock[] = [
   { id: 'block-b', floorId: 'floor-b2', name: 'Block B', label: 'BLOCK B', capacity: 60, occupied: 12, status: 'available', x: 280, y: 80, width: 180, height: 200 },
   { id: 'block-c', floorId: 'floor-b2', name: 'Block C', label: 'BLOCK C', capacity: 80, occupied: 5, status: 'available', x: 490, y: 80, width: 230, height: 200 },
   { id: 'block-d', floorId: 'floor-b2', name: 'Block D', label: 'BLOCK D', capacity: 50, occupied: 25, status: 'busy', x: 100, y: 320, width: 120, height: 200 },
-  { id: 'block-e', floorId: 'floor-b2', name: 'Block E', label: 'BLOCK E (VIP)', capacity: 120, occupied: 118, status: 'full', x: 280, y: 320, width: 440, height: 200, vip: true },
+  { id: 'block-e', floorId: 'floor-b2', name: 'Block E', label: 'BLOCK E', capacity: 120, occupied: 118, status: 'full', x: 280, y: 320, width: 440, height: 200, vip: true },
   { id: 'block-f', floorId: 'floor-b2', name: 'Block F', label: 'BLOCK F', capacity: 50, occupied: 2, status: 'available', x: 780, y: 80, width: 140, height: 440, rotateLabel: true },
 
   { id: 'block-a', floorId: 'floor-b1', name: 'Block A', label: 'BLOCK A', capacity: 64, occupied: 42, status: 'busy', x: 100, y: 80, width: 160, height: 210 },
@@ -52,7 +52,10 @@ export const mockSignage: DigitalSignage[] = [
   { id: 'DS-501', floorId: 'floor-b1', blockId: 'block-a', location: 'Ramp Down', status: 'online', contentTitle: 'ATASUN CAMPAIGN', template: 'Partner Campaign (v2.0)', brightness: 80, temperatureC: 33.0, lastSync: '4m ago', x: 244, y: 434, orientation: 'vertical' },
   { id: 'DS-502', floorId: 'floor-b1', blockId: 'block-b', location: 'Central Pillar', status: 'online', contentTitle: 'ADIDAS OFFER', template: 'Retail Offer (v3.1)', brightness: 88, temperatureC: 32.7, lastSync: 'Just now', x: 744, y: 434, orientation: 'vertical' },
   { id: 'DS-402', floorId: 'floor-b2', blockId: 'block-a', location: 'Block A Entry', status: 'online', contentTitle: 'WELCOME TO EMAAR SQUARE AVM', template: 'Standard Welcome (v4.2)', brightness: 85, temperatureC: 32.4, lastSync: '14:20:05', x: 244, y: 134, orientation: 'vertical' },
+  { id: 'DS-603', floorId: 'floor-b2', blockId: 'block-c', location: 'Center Junction', status: 'online', contentTitle: 'FIND YOUR CAR', template: 'Wayfinding (v2.3)', brightness: 81, temperatureC: 31.2, lastSync: '31s ago', x: 452, y: 132, orientation: 'horizontal' },
   { id: 'DS-604', floorId: 'floor-b2', blockId: 'block-f', location: 'Exit Portal B', status: 'online', contentTitle: 'VALET SERVICE', template: 'Valet Direction (v1.5)', brightness: 72, temperatureC: 30.2, lastSync: '1h ago', x: 484, y: 294, orientation: 'horizontal' },
+  { id: 'DS-605', floorId: 'floor-b2', blockId: 'block-e', location: 'VIP Corridor', status: 'online', contentTitle: 'VIP ACCESS', template: 'Vip Guidance (v1.1)', brightness: 76, temperatureC: 30.8, lastSync: '2m ago', x: 564, y: 404, orientation: 'vertical' },
+  { id: 'DS-606', floorId: 'floor-b2', blockId: 'block-f', location: 'North Exit Lane', status: 'offline', contentTitle: 'SERVICE CHECK', template: 'Diagnostics', brightness: 0, temperatureC: 28.9, lastSync: '3h ago', x: 824, y: 182, orientation: 'vertical' },
 ]
 
 export const mockMessageTemplates: MessageTemplate[] = [

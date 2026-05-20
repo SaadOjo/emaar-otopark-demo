@@ -1,4 +1,4 @@
-import { CarFront, Layers, Monitor, Route } from 'lucide-react'
+import { CarFront, Layers, Monitor } from 'lucide-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 export function AppLayout() {
@@ -10,7 +10,6 @@ export function AppLayout() {
       <aside className="side-nav">
         <NavLink className="brand" to="/floors/floor-b2">
           <strong>AVM Admin</strong>
-          <span>Parking Hub v2.4</span>
         </NavLink>
 
         <nav>
@@ -25,10 +24,6 @@ export function AppLayout() {
           <NavLink to="/driver/welcome">
             <CarFront size={20} />
             <span>Driver Welcome</span>
-          </NavLink>
-          <NavLink to="/driver/navigation">
-            <Route size={20} />
-            <span>Driver Route</span>
           </NavLink>
         </nav>
       </aside>

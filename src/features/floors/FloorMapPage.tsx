@@ -98,22 +98,25 @@ export function FloorMapPage() {
             })}
 
             <g>
-              {signage.map((item) => (
-                <g
-                  className="signage-marker-svg"
-                  key={item.id}
-                  onClick={() => navigate(`/floors/${item.floorId}/blocks/${item.blockId ?? 'block-a'}/signage/${item.id}`)}
-                >
-                  <rect
-                    height={item.orientation === 'horizontal' ? 12 : 32}
-                    rx="2"
-                    width={item.orientation === 'horizontal' ? 32 : 12}
-                    x={item.x ?? 0}
-                    y={item.y ?? 0}
-                  />
-                  <text x={(item.x ?? 0) + (item.orientation === 'horizontal' ? 16 : 6)} y={(item.y ?? 0) + (item.orientation === 'horizontal' ? 10 : 20)} textAnchor="middle">▣</text>
-                </g>
-              ))}
+              {signage.map((item) => {
+                const x = item.x ?? 0
+                const y = item.y ?? 0
+                const iconX = x - 12
+                const iconY = y - 10
+
+                return (
+                  <g
+                    className="signage-marker-svg"
+                    key={item.id}
+                    onClick={() => navigate(`/floors/${item.floorId}/blocks/${item.blockId ?? 'block-a'}/signage/${item.id}`)}
+                  >
+                    <rect className="signage-marker-screen" height="16" rx="3" width="24" x={iconX} y={iconY} />
+                    <rect className="signage-marker-stand" height="6" rx="2" width="4" x={x - 2} y={iconY + 16} />
+                    <rect className="signage-marker-base" height="3" rx="2" width="14" x={x - 7} y={iconY + 21} />
+                    <circle className={`signage-marker-dot signage-marker-dot--${item.status}`} cx={iconX + 20} cy={iconY + 4} r="2.5" />
+                  </g>
+                )
+              })}
             </g>
           </svg>
         </div>

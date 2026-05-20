@@ -30,7 +30,7 @@ export function WelcomePage() {
               <h2>{item.storeName}</h2>
               <p><Layers size={15} /> {item.floorLabel}, {item.blockLabel}</p>
               <p><ParkingCircle size={15} /> {item.spotLabel}</p>
-              <Link className={item.closest ? 'route-primary' : 'route-secondary'} to="/driver/navigation">
+              <Link className={item.closest ? 'route-primary' : 'route-secondary'} to={`/driver/navigation?destination=${item.id}`}>
                 Yol Tarifi Al
                 <Navigation size={16} />
               </Link>

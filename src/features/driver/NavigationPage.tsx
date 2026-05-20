@@ -1,52 +1,62 @@
-import { Compass, Clock3, Map, Navigation, Route, X } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { LocateFixed, Navigation } from 'lucide-react'
+import { Link, useSearchParams } from 'react-router-dom'
+
+const routeMap = {
+  starbucks: { name: 'Starbucks', floor: 'Kat -2', block: 'Blok A', spot: 'Nokta 11', distance: '120 m', eta: '2 dk' },
+  adidas: { name: 'Adidas', floor: 'Kat 1', block: 'Blok A', spot: 'Nokta 10', distance: '260 m', eta: '4 dk' },
+  atasun: { name: 'Atasun Optik', floor: 'Kat 0', block: 'Blok A', spot: 'Nokta 11', distance: '180 m', eta: '3 dk' },
+} as const
 
 export function NavigationPage() {
+  const [searchParams] = useSearchParams()
+  const destinationId = (searchParams.get('destination') as keyof typeof routeMap | null) ?? 'starbucks'
+  const destination = routeMap[destinationId] ?? routeMap.starbucks
+
   return (
-    <main className="driver-navigation-page">
+    <main className="driver-navigation-page driver-navigation-page--maps">
       <div className="navigation-map-shell">
-        <div className="navigation-map">
-          <div className="dot-grid" />
-          <svg className="route-svg" viewBox="0 0 1000 600" aria-label="Route to Starbucks parking spot 11">
-            <g className="parking-row-lines">
-              <rect height="400" rx="4" width="150" x="100" y="100" />
-              <rect height="400" rx="4" width="150" x="300" y="100" />
-              <rect height="400" rx="4" width="150" x="550" y="100" />
-              <rect height="400" rx="4" width="150" x="750" y="100" />
+        <div className="navigation-map navigation-map--maps">
+          <div className="maps-toolbar-actions maps-toolbar-actions--floating"><button aria-label="Re-center map"><LocateFixed size={18} /></button></div>
+
+          <svg className="route-svg" viewBox="0 0 1000 600" aria-label={`Route to ${destination.name} ${destination.spot}`}>
+            <g className="maps-parking-blocks">
+              <rect height="164" rx="18" width="190" x="110" y="92" />
+              <rect height="164" rx="18" width="190" x="352" y="92" />
+              <rect height="208" rx="18" width="190" x="604" y="92" />
+              <rect height="164" rx="18" width="190" x="110" y="346" />
+              <rect height="164" rx="18" width="190" x="352" y="346" />
             </g>
-            <g className="pillars">
-              <circle cx="275" cy="150" r="8" />
-              <circle cx="275" cy="300" r="8" />
-              <circle cx="275" cy="450" r="8" />
-              <circle cx="525" cy="150" r="8" />
-              <circle cx="525" cy="300" r="8" />
-              <circle cx="525" cy="450" r="8" />
+            <g className="maps-road-grid">
+              <path d="M 40 300 L 960 300" />
+              <path d="M 326 60 L 326 540" />
+              <path d="M 578 60 L 578 540" />
             </g>
-            <path className="route-line" d="M 50 500 L 275 500 L 275 250 L 525 250 L 525 150 L 550 150" />
-            <circle className="start-marker" cx="50" cy="500" r="6" />
-            <text className="route-text" x="50" y="530">ENTRANCE</text>
-            <g className="destination-marker" transform="translate(560, 140)">
-              <circle cx="0" cy="0" r="10" />
-              <text x="15" y="5">SPOT 11</text>
-              <path d="M -5 -2 L 0 3 L 5 -2" />
+            <path className="route-line route-line--maps-shadow" d="M 82 480 L 326 480 L 326 300 L 578 300 L 578 174 L 706 174" />
+            <path className="route-line route-line--maps" d="M 82 480 L 326 480 L 326 300 L 578 300 L 578 174 L 706 174" />
+            <circle className="start-marker start-marker--maps" cx="82" cy="480" r="10" />
+            <text className="route-text route-text--maps" x="48" y="516">Giriş</text>
+            <g className="destination-pin" transform="translate(706, 174)">
+              <path d="M 0 -26 C 13 -26 24 -16 24 -3 C 24 14 8 25 0 38 C -8 25 -24 14 -24 -3 C -24 -16 -13 -26 0 -26 Z" />
+              <circle cx="0" cy="-3" r="9" />
             </g>
           </svg>
 
-          <aside className="route-panel glass-panel">
-            <small>Active Route</small>
-            <h1>Starbucks - Nokta 11</h1>
-            <p><Route size={18} /> Mesafe: 120m</p>
-            <p><Clock3 size={18} /> Arrival: 2 min</p>
-            <Link to="/driver/welcome"><X size={16} /> Cancel Route</Link>
+          <aside className="route-panel route-panel--maps glass-panel">
+            <small>Canlı Yol Tarifi</small>
+            <h1>{destination.name}</h1>
+            <p>{destination.distance}</p>
+            <p>Varış: {destination.eta}</p>
+            <p>{destination.floor}, {destination.block}</p>
+            <strong>{destination.spot}</strong>
+            <Link to="/driver/welcome">Rotayı Kapat</Link>
           </aside>
 
-          <div className="map-legend glass-panel">
-            <span><Compass size={16} /> N</span>
+          <div className="map-legend map-legend--maps glass-panel">
+            <span><Navigation size={16} /> Canlı</span>
             <i />
-            <span><Map size={16} /> 2D View</span>
+            <span>2D</span>
           </div>
 
-          <div className="route-now-pill"><Navigation size={16} /> Live Route Active</div>
         </div>
       </div>
     </main>
