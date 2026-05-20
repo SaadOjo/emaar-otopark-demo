@@ -1,4 +1,4 @@
-import { ChevronRight, Edit3, Expand, RefreshCcw, Wifi } from 'lucide-react'
+import { ChevronRight, Expand, RefreshCcw, Users, Wifi } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { EmptyState } from '../../components/ui/EmptyState'
@@ -11,14 +11,12 @@ export function SignageDetailPage() {
   const [signage, setSignage] = useState<DigitalSignage>()
   const [floor, setFloor] = useState<Floor>()
   const [block, setBlock] = useState<ParkingBlock>()
-  const [brightness, setBrightness] = useState(85)
   const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     otoparkRepository.getSignage(signageId).then((item) => {
       setSignage(item)
       if (!item) return
-      setBrightness(item.brightness)
       otoparkRepository.getFloor(item.floorId).then(setFloor)
       if (item.blockId) otoparkRepository.getBlock(item.floorId, item.blockId).then(setBlock)
     })
@@ -27,6 +25,7 @@ export function SignageDetailPage() {
   if (!signage) return <EmptyState title="Digital signage not found" />
 
   const inSignageTab = pathname.startsWith('/signage')
+  const audience = getAudienceStats(signage)
 
   function handleRefresh() {
     setRefreshing(true)
@@ -92,13 +91,19 @@ export function SignageDetailPage() {
             </div>
           </section>
 
-          <section className="glass-panel control-card panel-control-card">
-            <h3>Panel Controls</h3>
-            <button className="change-content"><Edit3 size={18} /> Change Content Manually</button>
-            <div className="brightness-control">
-              <div><strong>Panel Brightness</strong><span>{brightness}%</span></div>
-              <input min="0" max="100" type="range" value={brightness} onChange={(event) => setBrightness(Number(event.target.value))} />
-              <footer><span>Auto (Eco)</span><span>Peak (1200 nits)</span></footer>
+          <section className="glass-panel control-card audience-card">
+            <h3>User Stats</h3>
+            <div className="audience-intro">
+              <span className="audience-total"><Users size={18} /> Estimated live audience: {audience.estimatedViewers}</span>
+              <p>This panel is currently prioritizing <strong>{audience.primarySegment}</strong> because that audience is dominant in this zone right now.</p>
+            </div>
+            <div className="audience-grid">
+              {audience.segments.map((segment) => (
+                <div key={segment.label}>
+                  <small>{segment.label}</small>
+                  <strong>{segment.count} users</strong>
+                </div>
+              ))}
             </div>
           </section>
         </aside>
@@ -111,4 +116,46 @@ export function SignageDetailPage() {
       </footer>
     </section>
   )
+}
+
+function getAudienceStats(signage: DigitalSignage) {
+  if (signage.id === 'DS-402') {
+    return {
+      estimatedViewers: 18,
+      primarySegment: 'VIP and high-segment drivers',
+      segments: [
+        { label: 'High-Segment', count: 5 },
+        { label: 'VIP', count: 5 },
+        { label: 'Family', count: 4 },
+        { label: 'Valet', count: 2 },
+        { label: 'EV Owner', count: 2 },
+      ],
+    }
+  }
+
+  if (signage.id === 'DS-604') {
+    return {
+      estimatedViewers: 11,
+      primarySegment: 'valet users',
+      segments: [
+        { label: 'Valet', count: 4 },
+        { label: 'Premium', count: 3 },
+        { label: 'Family', count: 2 },
+        { label: 'VIP', count: 1 },
+        { label: 'EV Owner', count: 1 },
+      ],
+    }
+  }
+
+  return {
+    estimatedViewers: 14,
+    primarySegment: 'mixed mall visitors',
+    segments: [
+      { label: 'Standard', count: 5 },
+      { label: 'Family', count: 3 },
+      { label: 'Premium', count: 3 },
+      { label: 'VIP', count: 2 },
+      { label: 'EV Owner', count: 1 },
+    ],
+  }
 }
