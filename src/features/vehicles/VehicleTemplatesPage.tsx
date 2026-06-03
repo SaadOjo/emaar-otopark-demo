@@ -1,4 +1,4 @@
-import { BadgeCheck, ChevronRight, Coffee, Megaphone, MoreVertical, Sparkles } from 'lucide-react'
+import { BadgeCheck, ChevronRight, Coffee, Megaphone, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { EmptyState } from '../../components/ui/EmptyState'
@@ -25,40 +25,41 @@ export function VehicleTemplatesPage() {
 
   if (!vehicle) return <EmptyState title="Vehicle not found" />
 
+  const sentCount = templates.filter((item) => item.sentAt).length
+  const waitingCount = templates.length - sentCount
+
   return (
     <section className="vehicle-page">
       <main className="vehicle-content">
         <nav className="breadcrumbs">
-          <Link to={`/floors/${vehicle.floorId}`}>Floor Maps</Link>
+          <Link to="/floors">Floor Maps</Link>
           <ChevronRight size={14} />
-          <Link to={`/floors/${vehicle.floorId}`}>{floor?.label ?? vehicle.floorId}</Link>
+          <Link to={`/floors/${vehicle.floorId}`}>{floor?.shortLabel ?? vehicle.floorId}</Link>
           <ChevronRight size={14} />
           <Link to={`/floors/${vehicle.floorId}/blocks/${vehicle.blockId}`}>{block?.name ?? vehicle.blockId}</Link>
           <ChevronRight size={14} />
-          <span>Vehicle Details ({vehicle.spotId})</span>
+          <span>Vehicle {vehicle.spotId}</span>
         </nav>
 
         <section className="vehicle-header-card glass-panel">
           <div className="vehicle-title-group">
-            <div className="vehicle-thumb" />
             <div>
               <h1>{vehicle.brand} {vehicle.model}</h1>
-              <p>{vehicle.plate} · {vehicle.locationLabel}</p>
+              <p>{vehicle.plate} · {vehicle.spotId}, {block?.name ?? vehicle.blockId}, {floor?.shortLabel ?? vehicle.floorId}</p>
             </div>
           </div>
           <div className="member-block">
             <div>
               <small>{vehicle.tier}</small>
-              <strong>{vehicle.owner}</strong>
+              <strong>{vehicle.owner ?? 'Not linked to app'}</strong>
             </div>
-            <button><MoreVertical size={20} /></button>
           </div>
         </section>
 
         <section className="message-section">
           <div className="message-section-head">
             <h2>Message Template Selector</h2>
-            <span>{templates.filter((item) => item.sentAt).length} Sent Templates</span>
+            <span>{sentCount} sent · {waitingCount} waiting</span>
           </div>
 
           <div className="template-grid">
@@ -78,7 +79,11 @@ export function VehicleTemplatesPage() {
                 </div>
                 <footer>
                   <span>{template.trigger}</span>
-                  {template.sentAt && <strong><BadgeCheck size={14} /> Sent at {template.sentAt}</strong>}
+                  {template.sentAt ? (
+                    <strong><BadgeCheck size={14} /> Sent at {template.sentAt}</strong>
+                  ) : (
+                    <strong>Waiting for trigger</strong>
+                  )}
                 </footer>
               </button>
             ))}
@@ -86,8 +91,7 @@ export function VehicleTemplatesPage() {
         </section>
 
         <footer className="vehicle-footer">
-          <div><small>Current Location</small><strong>{vehicle.locationLabel}</strong></div>
-          <span><i /> Live Signal Active</span>
+          <div><small>Current Location</small><strong>{vehicle.spotId}, {block?.name ?? vehicle.blockId}, {floor?.shortLabel ?? vehicle.floorId}</strong></div>
         </footer>
       </main>
     </section>

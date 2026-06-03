@@ -39,7 +39,7 @@ export function WelcomePage() {
         </div>
 
         <footer>
-          <Link to="/floors/floor-b2"><X size={18} /> Şimdi Değil</Link>
+          <Link to="/floors"><X size={18} /> Şimdi Değil</Link>
         </footer>
       </section>
     </main>

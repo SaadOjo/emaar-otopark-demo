@@ -1,6 +1,6 @@
 import type { FloorId } from '../../domain/types'
 import type { OtoparkRepository } from '../repositories/otoparkRepository'
-import { mockBlocks, mockFloors, mockMessageTemplates, mockRecommendations, mockSignage, mockSpots, mockVehicles } from './mockData'
+import { getMockMessageTemplates, mockBlocks, mockFloors, mockPaymentActivities, mockRecommendations, mockSignage, mockSpots, mockVehicles } from './mockData'
 
 export const mockOtoparkRepository: OtoparkRepository = {
   async listFloors() {
@@ -47,11 +47,15 @@ export const mockOtoparkRepository: OtoparkRepository = {
     return mockSignage.find((signage) => signage.id === signageId)
   },
 
-  async listMessageTemplates() {
-    return mockMessageTemplates
+  async listMessageTemplates(vehicleId?: string) {
+    return getMockMessageTemplates(vehicleId)
   },
 
   async listRecommendations() {
     return mockRecommendations
+  },
+
+  async listPaymentActivities() {
+    return mockPaymentActivities
   },
 }
