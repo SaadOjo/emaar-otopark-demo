@@ -1,6 +1,6 @@
-import { Monitor, RefreshCcw } from 'lucide-react'
+import { ChevronRight, RefreshCcw } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { otoparkRepository } from '../../data/repository'
 import type { DigitalSignage, Floor, FloorId, ParkingBlock } from '../../domain/types'
 
@@ -45,16 +45,25 @@ export function FloorMapPage() {
   return (
     <section className="floor-page page-with-footer">
       <header className="floor-topbar">
-        <div className="select-wrap">
-          <select value={selectedFloorId} onChange={(event) => navigate(`/floors/${event.target.value}`)} aria-label="Select floor">
-            {floors.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
-          </select>
-        </div>
+        <nav className="breadcrumbs">
+          <Link to="/floors">Floor Maps</Link>
+          <ChevronRight size={14} />
+          <span>{floor?.shortLabel ?? selectedFloorId}</span>
+        </nav>
 
-        <div className="legend glass-panel compact">
+        <div className="floor-topbar-actions">
+          <div className="select-wrap">
+            <select value={selectedFloorId} onChange={(event) => navigate(`/floors/${event.target.value}`)} aria-label="Select floor">
+              {floors.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+            </select>
+          </div>
+
+          <div className="legend glass-panel compact">
           <span><i className="legend-dot legend-dot--available" /> Available</span>
+          <span><i className="legend-dot legend-dot--busy" /> Busy</span>
           <span><i className="legend-dot legend-dot--full" /> Full</span>
-          <span><Monitor size={14} /> Signage</span>
+          <span><i className="legend-signage-icon" /> Signage</span>
+          </div>
         </div>
       </header>
 
@@ -80,7 +89,7 @@ export function FloorMapPage() {
                 >
                   <rect className={`parking-block-svg parking-block-svg--${block.status}`} height={block.height} rx="4" width={block.width} x={block.x} y={block.y} />
                   <text
-                    className={`floor-block-label ${block.status === 'available' ? 'floor-block-label--bright' : ''}`}
+                    className={`floor-block-label floor-block-label--${block.status}`}
                     textAnchor="middle"
                     x={centerX}
                     y={centerY}
@@ -101,19 +110,21 @@ export function FloorMapPage() {
               {signage.map((item) => {
                 const x = item.x ?? 0
                 const y = item.y ?? 0
-                const iconX = x - 12
-                const iconY = y - 10
+                const isHorizontal = item.orientation === 'horizontal'
 
                 return (
                   <g
                     className="signage-marker-svg"
                     key={item.id}
-                    onClick={() => navigate(`/floors/${item.floorId}/blocks/${item.blockId ?? 'block-a'}/signage/${item.id}`)}
+                    onClick={() => navigate(`/signage/${item.id}`)}
                   >
-                    <rect className="signage-marker-screen" height="16" rx="3" width="24" x={iconX} y={iconY} />
-                    <rect className="signage-marker-stand" height="6" rx="2" width="4" x={x - 2} y={iconY + 16} />
-                    <rect className="signage-marker-base" height="3" rx="2" width="14" x={x - 7} y={iconY + 21} />
-                    <circle className={`signage-marker-dot signage-marker-dot--${item.status}`} cx={iconX + 20} cy={iconY + 4} r="2.5" />
+                    <line
+                      className={`signage-marker-line signage-marker-line--${item.status}`}
+                      x1={isHorizontal ? x - 28 : x}
+                      x2={isHorizontal ? x + 28 : x}
+                      y1={isHorizontal ? y : y - 28}
+                      y2={isHorizontal ? y : y + 28}
+                    />
                   </g>
                 )
               })}

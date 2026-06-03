@@ -1,4 +1,4 @@
-import type { DigitalSignage, Floor, FloorId, MessageTemplate, ParkingBlock, ParkingSpot, StoreRecommendation, Vehicle } from '../../domain/types'
+import type { DigitalSignage, Floor, FloorId, MessageTemplate, ParkingBlock, ParkingSpot, PaymentActivity, StoreRecommendation, Vehicle } from '../../domain/types'
 
 export interface OtoparkRepository {
   listFloors(): Promise<Floor[]>
@@ -12,4 +12,5 @@ export interface OtoparkRepository {
   getSignage(signageId: string): Promise<DigitalSignage | undefined>
   listMessageTemplates(vehicleId?: string): Promise<MessageTemplate[]>
   listRecommendations(): Promise<StoreRecommendation[]>
+  listPaymentActivities(): Promise<PaymentActivity[]>
 }
