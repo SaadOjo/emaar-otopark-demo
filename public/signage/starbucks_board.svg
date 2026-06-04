@@ -1,0 +1,9 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#050505"/>
+  <circle cx="1280" cy="170" r="220" fill="#7BFFB4" fill-opacity="0.10"/>
+  <circle cx="280" cy="740" r="250" fill="#7BFFB4" fill-opacity="0.07"/>
+  <rect x="120" y="120" width="1360" height="660" rx="28" fill="#101412" stroke="#274438" stroke-width="2"/>
+  <text x="800" y="320" text-anchor="middle" fill="#ECFFF5" font-family="Arial, sans-serif" font-size="74" font-weight="700" letter-spacing="10">STARBUCKS</text>
+  <text x="800" y="420" text-anchor="middle" fill="#B8F5D2" font-family="Arial, sans-serif" font-size="34" font-weight="600" letter-spacing="8">FREE TALL COFFEE</text>
+  <text x="800" y="555" text-anchor="middle" fill="#C6D6CD" font-family="Arial, sans-serif" font-size="28" font-weight="500" letter-spacing="5">SELECTED PARKING VISITORS • TODAY ONLY</text>
+</svg>

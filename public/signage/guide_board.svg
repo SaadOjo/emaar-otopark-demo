@@ -1,0 +1,9 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#060708"/>
+  <circle cx="260" cy="220" r="220" fill="#7AD5FF" fill-opacity="0.10"/>
+  <circle cx="1320" cy="720" r="240" fill="#7AD5FF" fill-opacity="0.08"/>
+  <rect x="120" y="120" width="1360" height="660" rx="28" fill="#111418" stroke="#1D3341" stroke-width="2"/>
+  <text x="800" y="330" text-anchor="middle" fill="#F2FBFF" font-family="Arial, sans-serif" font-size="72" font-weight="700" letter-spacing="10">WAYFINDING</text>
+  <text x="800" y="430" text-anchor="middle" fill="#A6E2FF" font-family="Arial, sans-serif" font-size="34" font-weight="600" letter-spacing="8">FOLLOW THE DIRECTIONAL SIGNS</text>
+  <text x="800" y="560" text-anchor="middle" fill="#B7C6D1" font-family="Arial, sans-serif" font-size="28" font-weight="500" letter-spacing="5">PARKING • EXIT • MALL ACCESS</text>
+</svg>

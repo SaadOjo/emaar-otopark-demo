@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { otoparkRepository } from '../../data/repository'
 import type { DigitalSignage, Floor, ParkingBlock } from '../../domain/types'
+import { getFloorVisualMetrics } from './visualMetrics'
 
 export function FloorOverviewPage() {
   const [floors, setFloors] = useState<Floor[]>([])
@@ -16,17 +17,16 @@ export function FloorOverviewPage() {
   }, [])
 
   const totals = useMemo(() => {
-    const capacity = floors.reduce((sum, floor) => sum + floor.capacity, 0)
-    const occupied = floors.reduce((sum, floor) => sum + floor.occupied, 0)
-    const activeSigns = signage.filter((item) => item.status === 'online').length
+    const summary = getFloorVisualMetrics(blocks)
+    const signages = signage.length
 
     return {
-      capacity,
-      occupied,
-      free: Math.max(capacity - occupied, 0),
-      activeSigns,
+      capacity: summary.total,
+      occupied: summary.occupied,
+      free: summary.free,
+      signages,
     }
-  }, [floors, signage])
+  }, [blocks, signage])
 
   const summaries = useMemo(() => {
     return floors.map((floor) => {
@@ -35,16 +35,19 @@ export function FloorOverviewPage() {
       const availableBlocks = floorBlocks.filter((block) => block.status === 'available').length
       const busyBlocks = floorBlocks.filter((block) => block.status === 'busy').length
       const fullBlocks = floorBlocks.filter((block) => block.status === 'full').length
-      const activeSigns = floorSignage.filter((item) => item.status === 'online').length
-      const occupancyRate = floor.capacity ? Math.round((floor.occupied / floor.capacity) * 100) : 0
+      const metrics = getFloorVisualMetrics(floorBlocks)
+      const signages = floorSignage.length
+      const occupancyRate = metrics.total ? Math.round((metrics.occupied / metrics.total) * 100) : 0
 
       return {
         floor,
         availableBlocks,
         busyBlocks,
         fullBlocks,
-        activeSigns,
+        signages,
         occupancyRate,
+        parkedCars: metrics.occupied,
+        freeSpots: metrics.free,
         floorStatus: getFloorStatus(occupancyRate),
       }
     })
@@ -74,14 +77,14 @@ export function FloorOverviewPage() {
               <strong>{totals.free}</strong>
             </div>
             <div>
-              <small>Active Digital Signages</small>
-              <strong>{totals.activeSigns}</strong>
+              <small>Signages</small>
+              <strong>{totals.signages}</strong>
             </div>
           </div>
         </section>
 
         <div className="floor-overview-grid">
-          {summaries.map(({ floor, availableBlocks, busyBlocks, fullBlocks, activeSigns, occupancyRate, floorStatus }) => (
+          {summaries.map(({ floor, availableBlocks, busyBlocks, fullBlocks, signages, occupancyRate, parkedCars, freeSpots, floorStatus }) => (
             <Link className="floor-overview-card glass-panel" key={floor.id} to={`/floors/${floor.id}`}>
               <div className="floor-overview-card-head">
                 <div>
@@ -98,11 +101,11 @@ export function FloorOverviewPage() {
                 </div>
                 <div>
                   <small>Parked Cars</small>
-                  <strong>{floor.occupied}</strong>
+                  <strong>{parkedCars}</strong>
                 </div>
                 <div>
                   <small>Free Spots</small>
-                  <strong>{Math.max(floor.capacity - floor.occupied, 0)}</strong>
+                  <strong>{freeSpots}</strong>
                 </div>
               </div>
 
@@ -110,7 +113,7 @@ export function FloorOverviewPage() {
                 <span>Available blocks: <strong>{availableBlocks}</strong></span>
                 <span>Busy blocks: <strong>{busyBlocks}</strong></span>
                 <span>Full blocks: <strong>{fullBlocks}</strong></span>
-                <span>Active digital signages: <strong>{activeSigns}</strong></span>
+                <span>Signages: <strong>{signages}</strong></span>
               </div>
 
               <footer>

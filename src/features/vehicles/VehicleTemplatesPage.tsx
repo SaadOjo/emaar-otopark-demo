@@ -90,9 +90,6 @@ export function VehicleTemplatesPage() {
           </div>
         </section>
 
-        <footer className="vehicle-footer">
-          <div><small>Current Location</small><strong>{vehicle.spotId}, {block?.name ?? vehicle.blockId}, {floor?.shortLabel ?? vehicle.floorId}</strong></div>
-        </footer>
       </main>
     </section>
   )

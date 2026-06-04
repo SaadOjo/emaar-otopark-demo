@@ -1,0 +1,9 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#050608"/>
+  <circle cx="1320" cy="170" r="220" fill="#FFFFFF" fill-opacity="0.08"/>
+  <circle cx="260" cy="720" r="260" fill="#FFFFFF" fill-opacity="0.05"/>
+  <rect x="120" y="120" width="1360" height="660" rx="28" fill="#111317" stroke="#2D3137" stroke-width="2"/>
+  <text x="800" y="310" text-anchor="middle" fill="#F7F8FA" font-family="Arial, sans-serif" font-size="70" font-weight="700" letter-spacing="10">EMAAR SQUARE AVM</text>
+  <text x="800" y="420" text-anchor="middle" fill="#DADDE3" font-family="Arial, sans-serif" font-size="34" font-weight="600" letter-spacing="8">WELCOME</text>
+  <text x="800" y="555" text-anchor="middle" fill="#B9BEC8" font-family="Arial, sans-serif" font-size="28" font-weight="500" letter-spacing="5">SHOPPING • DINING • ENTERTAINMENT</text>
+</svg>

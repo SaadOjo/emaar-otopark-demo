@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { otoparkRepository } from '../../data/repository'
 import type { DigitalSignage, Floor, FloorId, ParkingBlock } from '../../domain/types'
+import { getBlockVisualMetrics, getFloorVisualMetrics } from './visualMetrics'
 
 const defaultFloorId: FloorId = 'floor-b2'
 const floorIds: FloorId[] = ['floor-0', 'floor-b1', 'floor-b2']
@@ -26,14 +27,17 @@ export function FloorMapPage() {
   }, [selectedFloorId])
 
   const floor = floors.find((item) => item.id === selectedFloorId)
+  const visibleSignage = useMemo(
+    () => signage.map((item) => ({ item, marker: getFloorSignageMarker(item) })),
+    [signage],
+  )
   const capacity = useMemo(() => {
-    const total = blocks.reduce((sum, block) => sum + block.capacity, 0)
-    const occupied = blocks.reduce((sum, block) => sum + block.occupied, 0)
+    const summary = getFloorVisualMetrics(blocks)
     return {
-      total,
-      occupied,
-      free: Math.max(total - occupied, 0),
-      rate: total ? Math.round((occupied / total) * 100) : 0,
+      total: summary.total,
+      occupied: summary.occupied,
+      free: summary.free,
+      rate: summary.total ? Math.round((summary.occupied / summary.total) * 100) : 0,
     }
   }, [blocks])
 
@@ -82,9 +86,9 @@ export function FloorMapPage() {
                   key={`${block.floorId}-${block.id}`}
                   role="link"
                   tabIndex={0}
-                  onClick={() => navigate(`/floors/${block.floorId}/blocks/${block.id}`)}
+                  onClick={() => navigate(`/floors/${block.floorId}/blocks/${block.id}`, { state: { zoomFromFloorMap: getBlockZoomState(block) } })}
                   onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') navigate(`/floors/${block.floorId}/blocks/${block.id}`)
+                    if (event.key === 'Enter' || event.key === ' ') navigate(`/floors/${block.floorId}/blocks/${block.id}`, { state: { zoomFromFloorMap: getBlockZoomState(block) } })
                   }}
                 >
                   <rect className={`parking-block-svg parking-block-svg--${block.status}`} height={block.height} rx="4" width={block.width} x={block.x} y={block.y} />
@@ -99,7 +103,10 @@ export function FloorMapPage() {
                   </text>
                   <foreignObject className="block-tooltip" height="44" width="190" x={Math.max(block.x - 20, 60)} y={block.y < 300 ? block.y - 52 : block.y + block.height + 10}>
                     <div className="svg-tooltip glass-panel">
-                      {block.name}: {block.occupied}/{block.capacity} {block.status === 'full' ? 'Full' : block.status === 'busy' ? 'Busy' : 'Occupied'}
+                      {(() => {
+                        const metrics = getBlockVisualMetrics(block)
+                        return `${block.name}: ${metrics.occupied}/${metrics.total} ${block.status === 'full' ? 'Full' : block.status === 'busy' ? 'Busy' : 'Occupied'}`
+                      })()}
                     </div>
                   </foreignObject>
                 </g>
@@ -107,27 +114,30 @@ export function FloorMapPage() {
             })}
 
             <g>
-              {signage.map((item) => {
-                const x = item.x ?? 0
-                const y = item.y ?? 0
-                const isHorizontal = item.orientation === 'horizontal'
-
-                return (
-                  <g
-                    className="signage-marker-svg"
-                    key={item.id}
-                    onClick={() => navigate(`/signage/${item.id}`)}
+              {visibleSignage.map(({ item, marker }) => (
+                <g
+                  className="signage-marker-svg"
+                  key={item.id}
+                  onClick={() => navigate(item.blockId ? `/floors/${item.floorId}/blocks/${item.blockId}/signage/${item.id}` : `/signage/${item.id}`)}
+                >
+                  <line
+                    className={`signage-marker-line signage-marker-line--${item.status}`}
+                    x1={marker.isHorizontal ? marker.x - 28 : marker.x}
+                    x2={marker.isHorizontal ? marker.x + 28 : marker.x}
+                    y1={marker.isHorizontal ? marker.y : marker.y - 28}
+                    y2={marker.isHorizontal ? marker.y : marker.y + 28}
+                  />
+                  <foreignObject
+                    className="signage-tooltip"
+                    height="36"
+                    width="96"
+                    x={marker.x - 48}
+                    y={marker.y - 52}
                   >
-                    <line
-                      className={`signage-marker-line signage-marker-line--${item.status}`}
-                      x1={isHorizontal ? x - 28 : x}
-                      x2={isHorizontal ? x + 28 : x}
-                      y1={isHorizontal ? y : y - 28}
-                      y2={isHorizontal ? y : y + 28}
-                    />
-                  </g>
-                )
-              })}
+                    <div className="svg-tooltip glass-panel">{item.id}</div>
+                  </foreignObject>
+                </g>
+              ))}
             </g>
           </svg>
         </div>
@@ -140,9 +150,9 @@ export function FloorMapPage() {
           <strong>{capacity.rate}%</strong>
         </div>
         <div className="divider" />
-        <div className="status-group stat-pair"><span>Free Slots</span><strong>{capacity.free || floor ? capacity.free : 142}</strong></div>
+        <div className="status-group stat-pair"><span>Free Slots</span><strong>{capacity.free}</strong></div>
         <div className="divider" />
-        <div className="status-group stat-pair"><span>Active Signs</span><strong>{signage.filter((item) => item.status === 'online').length.toString().padStart(2, '0')}</strong></div>
+        <div className="status-group stat-pair"><span>Signages</span><strong>{visibleSignage.length.toString().padStart(2, '0')}</strong></div>
         <button className="refresh-button" onClick={handleRefresh}>
           <RefreshCcw className={refreshing ? 'spin' : ''} size={18} />
           Live Refresh
@@ -150,6 +160,22 @@ export function FloorMapPage() {
       </footer>
     </section>
   )
+}
+
+function getFloorSignageMarker(signage: DigitalSignage) {
+  return {
+    x: signage.x ?? 0,
+    y: signage.y ?? 0,
+    isHorizontal: (signage.mapOrientation ?? signage.orientation) === 'horizontal',
+  }
+}
+
+function getBlockZoomState(block: ParkingBlock) {
+  return {
+    originX: `${((block.x + block.width / 2) / 1000) * 100}%`,
+    originY: `${((block.y + block.height / 2) / 600) * 100}%`,
+    startScale: Math.max(0.16, Math.min(0.42, Math.max(block.width / 900, block.height / 500))),
+  }
 }
 
 function isFloorId(value: string | undefined): value is FloorId {

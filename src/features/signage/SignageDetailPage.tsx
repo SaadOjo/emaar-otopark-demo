@@ -1,9 +1,11 @@
 import { ChevronRight, Expand, RefreshCcw, Users, Wifi } from 'lucide-react'
+import type { SyntheticEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { EmptyState } from '../../components/ui/EmptyState'
 import { otoparkRepository } from '../../data/repository'
 import type { DigitalSignage, Floor, ParkingBlock } from '../../domain/types'
+import { getSignageBoardContent } from './signageBoardContent'
 
 export function SignageDetailPage() {
   const { signageId = '' } = useParams()
@@ -14,6 +16,7 @@ export function SignageDetailPage() {
   const [block, setBlock] = useState<ParkingBlock>()
   const [refreshing, setRefreshing] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [videoFailed, setVideoFailed] = useState(false)
   const boardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -34,6 +37,10 @@ export function SignageDetailPage() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
   }, [])
 
+  useEffect(() => {
+    setVideoFailed(false)
+  }, [signageId])
+
   if (!signage) return <EmptyState title="Digital signage not found" />
 
   const inSignageTab = pathname.startsWith('/signage')
@@ -46,6 +53,14 @@ export function SignageDetailPage() {
   function handleRefresh() {
     setRefreshing(true)
     window.setTimeout(() => setRefreshing(false), 700)
+  }
+
+  function handleBoardVideoTimeUpdate(event: SyntheticEvent<HTMLVideoElement>) {
+    const video = event.currentTarget
+    if (video.currentTime >= 10) {
+      video.currentTime = 0
+      void video.play().catch(() => undefined)
+    }
   }
 
   async function handlePreviewFullscreen() {
@@ -86,10 +101,43 @@ export function SignageDetailPage() {
         <section className="panel-preview-card glass-panel">
           <div className="section-title"><i className="pulse-dot" /> Live Panel View: {signage.id}</div>
           <div className={`digital-board digital-board--${boardContent.theme}`} ref={boardRef}>
-            <div className="board-copy">
-              <strong>{boardContent.headline}</strong>
-              <small className="board-subline">{boardContent.subline}</small>
-            </div>
+            {boardContent.imageSrc ? (
+              <img alt="" className="digital-board-image" src={boardContent.imageSrc} />
+            ) : boardContent.embedSrc ? (
+              <>
+                <iframe
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="digital-board-embed"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  src={boardContent.embedSrc}
+                  title={`${signage.id} content preview`}
+                />
+                <div className="board-video-overlay" />
+              </>
+            ) : boardContent.videoSrc && !videoFailed ? (
+              <>
+                <video
+                  autoPlay
+                  className="digital-board-video"
+                  loop
+                  muted
+                  playsInline
+                  onError={() => setVideoFailed(true)}
+                  onTimeUpdate={handleBoardVideoTimeUpdate}
+                  src={boardContent.videoSrc}
+                />
+                <div className="board-video-overlay" />
+              </>
+            ) : (
+              <>
+                {boardContent.motionAccent ? <div className={`board-motion board-motion--${boardContent.motionAccent}`} aria-hidden="true" /> : null}
+                <div className="board-copy">
+                  <strong>{boardContent.headline}</strong>
+                  <small className="board-subline">{boardContent.subline}</small>
+                </div>
+              </>
+            )}
           </div>
           <div className="preview-actions">
             <button className="primary-pill" onClick={handlePreviewFullscreen}><Expand size={18} /> {isFullscreen ? 'Exit Fullscreen' : 'Preview Fullscreen'}</button>
@@ -175,88 +223,6 @@ function toDotTime(date: Date) {
     minute: '2-digit',
     second: '2-digit',
   })
-}
-
-function getSignageBoardContent(signage: DigitalSignage) {
-  const content = `${signage.contentTitle} ${signage.template} ${signage.location}`.toUpperCase()
-
-  if (content.includes('STARBUCKS')) {
-    return {
-      theme: 'campaign',
-      headline: 'FREE TALL COFFEE',
-      subline: 'STARBUCKS · SELECTED PARKING VISITORS · TODAY ONLY',
-    }
-  }
-
-  if (content.includes('ADIDAS')) {
-    return {
-      theme: 'campaign',
-      headline: 'ADIDAS MEMBER OFFER',
-      subline: 'SELECTED PERFORMANCE ITEMS · LIMITED TIME',
-    }
-  }
-
-  if (content.includes('ATASUN')) {
-    return {
-      theme: 'campaign',
-      headline: 'ATASUN OPTIK',
-      subline: 'SELECTED FRAMES & SUNGLASSES · IN-STORE ADVANTAGE',
-    }
-  }
-
-  if (content.includes('VIP')) {
-    return {
-      theme: 'vip',
-      headline: signage.contentTitle,
-      subline: 'FOLLOW THE RESERVED VIP CORRIDOR',
-    }
-  }
-
-  if (content.includes('VALET')) {
-    return {
-      theme: 'service',
-      headline: signage.contentTitle,
-      subline: 'CHECK-IN AND PICKUP LANE AHEAD',
-    }
-  }
-
-  if (content.includes('PAYMENT')) {
-    return {
-      theme: 'service',
-      headline: 'PAYMENT KIOSK',
-      subline: 'CARD AND MOBILE PAYMENT AVAILABLE AHEAD',
-    }
-  }
-
-  if (content.includes('FIND YOUR CAR')) {
-    return {
-      theme: 'guidance',
-      headline: 'FIND YOUR CAR',
-      subline: 'USE THE KIOSK OR APP FOR QUICK GUIDANCE',
-    }
-  }
-
-  if (content.includes('GUIDE') || content.includes('EXIT') || content.includes('DIRECTION')) {
-    return {
-      theme: 'guidance',
-      headline: signage.contentTitle,
-      subline: signage.location.toUpperCase(),
-    }
-  }
-
-  if (content.includes('OFFLINE') || content.includes('SERVICE CHECK') || content.includes('DIAGNOSTICS')) {
-    return {
-      theme: 'system',
-      headline: 'SERVICE CHECK',
-      subline: 'TEMPORARILY UNAVAILABLE',
-    }
-  }
-
-  return {
-    theme: 'welcome',
-    headline: signage.contentTitle,
-    subline: 'EMAAR SQUARE AVM · ENJOY YOUR VISIT',
-  }
 }
 
 function getAudienceStats(signage: DigitalSignage) {

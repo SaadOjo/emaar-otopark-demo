@@ -64,6 +64,9 @@ export interface DigitalSignage {
   x?: number
   y?: number
   orientation?: 'horizontal' | 'vertical'
+  mapOrientation?: 'horizontal' | 'vertical'
+  detailEdge?: 'top' | 'bottom' | 'left' | 'right'
+  detailOffset?: number
 }
 
 export interface MessageTemplate {
