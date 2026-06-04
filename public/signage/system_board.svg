@@ -1,0 +1,8 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#080808"/>
+  <circle cx="1280" cy="180" r="220" fill="#E0D4A8" fill-opacity="0.09"/>
+  <rect x="120" y="120" width="1360" height="660" rx="28" fill="#141414" stroke="#3B3B3B" stroke-width="2"/>
+  <text x="800" y="330" text-anchor="middle" fill="#F2EEE4" font-family="Arial, sans-serif" font-size="72" font-weight="700" letter-spacing="10">SERVICE CHECK</text>
+  <text x="800" y="430" text-anchor="middle" fill="#D1C7B0" font-family="Arial, sans-serif" font-size="34" font-weight="600" letter-spacing="8">TEMPORARILY UNAVAILABLE</text>
+  <text x="800" y="560" text-anchor="middle" fill="#A8A39A" font-family="Arial, sans-serif" font-size="28" font-weight="500" letter-spacing="5">PLEASE USE THE NEAREST ACTIVE SIGNAGE</text>
+</svg>

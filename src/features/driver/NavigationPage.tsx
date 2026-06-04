@@ -158,6 +158,7 @@ export function NavigationPage() {
   const routeSide = destination.targetBlock.endsWith('A') ? 'left' : 'right'
   const oppositeSide = routeSide === 'left' ? 'right' : 'left'
   const firstTransition = destination.stages.find((stage) => stage.type === 'transition')
+  const showRampSign = frame.type === 'transition' || frame.nextMarker === 'Rampa'
 
   useEffect(() => {
     setCurrentStep(0)
@@ -204,6 +205,15 @@ export function NavigationPage() {
                 <div className="camera-lane-centerline" />
                 <div className="camera-progress-line" style={{ height: `${18 + progressRatio * 56}%` }} />
                 <div className="camera-progress-car" style={{ bottom: `${12 + progressRatio * 14}%` }} />
+                {showRampSign && (
+                  <div className="camera-ramp-horizon" aria-hidden="true">
+                    <div className="camera-ramp-sign">
+                      <span>RAMPA</span>
+                      <strong>↓</strong>
+                    </div>
+                    <div className="camera-ramp-slope" />
+                  </div>
+                )}
 
                 {frame.type === 'lane' ? (
                   <>
@@ -255,6 +265,10 @@ export function NavigationPage() {
                   </>
                 ) : (
                   <div className="camera-floor-transition">
+                    <div className="camera-floor-transition-sign" aria-hidden="true">
+                      <span>RAMPA</span>
+                      <strong>↓</strong>
+                    </div>
                     <span>{frame.currentMarker}</span>
                     <strong>{frame.headline}</strong>
                     <p>{frame.subline}</p>
