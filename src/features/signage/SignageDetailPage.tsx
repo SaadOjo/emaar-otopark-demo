@@ -115,8 +115,6 @@ export function SignageDetailPage() {
                 />
                 <div className="board-video-overlay" />
               </>
-            ) : boardContent.imageSrc ? (
-              <img alt="" className="digital-board-image" src={boardContent.imageSrc} />
             ) : boardContent.embedSrc ? (
               <>
                 <iframe
@@ -129,6 +127,8 @@ export function SignageDetailPage() {
                 />
                 <div className="board-video-overlay" />
               </>
+            ) : boardContent.imageSrc ? (
+              <img alt="" className="digital-board-image" src={boardContent.imageSrc} />
             ) : (
               <>
                 {boardContent.motionAccent ? <div className={`board-motion board-motion--${boardContent.motionAccent}`} aria-hidden="true" /> : null}
