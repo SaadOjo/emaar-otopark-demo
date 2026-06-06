@@ -101,21 +101,7 @@ export function SignageDetailPage() {
         <section className="panel-preview-card glass-panel">
           <div className="section-title"><i className="pulse-dot" /> Live Panel View: {signage.id}</div>
           <div className={`digital-board digital-board--${boardContent.theme}`} ref={boardRef}>
-            {boardContent.imageSrc ? (
-              <img alt="" className="digital-board-image" src={boardContent.imageSrc} />
-            ) : boardContent.embedSrc ? (
-              <>
-                <iframe
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className="digital-board-embed"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  src={boardContent.embedSrc}
-                  title={`${signage.id} content preview`}
-                />
-                <div className="board-video-overlay" />
-              </>
-            ) : boardContent.videoSrc && !videoFailed ? (
+            {boardContent.videoSrc && !videoFailed ? (
               <>
                 <video
                   autoPlay
@@ -126,6 +112,20 @@ export function SignageDetailPage() {
                   onError={() => setVideoFailed(true)}
                   onTimeUpdate={handleBoardVideoTimeUpdate}
                   src={boardContent.videoSrc}
+                />
+                <div className="board-video-overlay" />
+              </>
+            ) : boardContent.imageSrc ? (
+              <img alt="" className="digital-board-image" src={boardContent.imageSrc} />
+            ) : boardContent.embedSrc ? (
+              <>
+                <iframe
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="digital-board-embed"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  src={boardContent.embedSrc}
+                  title={`${signage.id} content preview`}
                 />
                 <div className="board-video-overlay" />
               </>

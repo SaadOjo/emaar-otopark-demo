@@ -1,7 +1,8 @@
 import { Cuboid, Map } from 'lucide-react'
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { NavigationPage2D } from './NavigationPage2D'
-import { NavigationPage3D } from './NavigationPage3D'
+
+const NavigationPage3D = lazy(() => import('./NavigationPage3D').then((module) => ({ default: module.NavigationPage3D })))
 
 type DriverNavigationMode = '2d' | '3d'
 
@@ -31,7 +32,13 @@ export function NavigationPage() {
         </button>
       </div>
 
-      {mode === '2d' ? <NavigationPage2D /> : <NavigationPage3D />}
+      {mode === '2d' ? (
+        <NavigationPage2D />
+      ) : (
+        <Suspense fallback={<div className="driver-navigation-loading">3D görünüm yükleniyor...</div>}>
+          <NavigationPage3D />
+        </Suspense>
+      )}
     </div>
   )
 }
