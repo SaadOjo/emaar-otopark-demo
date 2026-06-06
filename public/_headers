@@ -1,0 +1,17 @@
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/models/*
+  Cache-Control: public, max-age=604800
+
+/draco/*
+  Cache-Control: public, max-age=604800
+
+/signage/*
+  Cache-Control: public, max-age=604800
+
+/videos/*
+  Cache-Control: public, max-age=604800
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
