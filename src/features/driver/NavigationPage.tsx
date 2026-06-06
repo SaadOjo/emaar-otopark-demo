@@ -11,8 +11,8 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 
 const routeMap = {
   starbucks: { name: 'Starbucks', floor: 'Kat -2', block: 'Blok A', spot: 'Nokta 11', accessPoint: 'Asansör A11', accessHint: 'Starbucks yönü', distance: '120 m', eta: '2 dk' },
-  adidas: { name: 'Adidas', floor: 'Kat 1', block: 'Blok A', spot: 'Nokta 10', accessPoint: 'Asansör B10', accessHint: 'Adidas yönü', distance: '260 m', eta: '4 dk' },
-  atasun: { name: 'Atasun Optik', floor: 'Kat 0', block: 'Blok A', spot: 'Nokta 11', accessPoint: 'Asansör A07', accessHint: 'Atasun Optik yönü', distance: '180 m', eta: '3 dk' },
+  adidas: { name: 'Adidas', floor: 'Kat -1', block: 'Blok B', spot: 'Nokta 10', accessPoint: 'Kuzey asansör lobisi', accessHint: 'Adidas yönü', distance: '260 m', eta: '4 dk' },
+  atasun: { name: 'Atasun Optik', floor: 'Kat 00', block: 'Blok A', spot: 'Nokta 11', accessPoint: 'Zemin kat ana lobi', accessHint: 'Atasun Optik yönü', distance: '180 m', eta: '3 dk' },
 } as const
 
 const routeSceneMap = {

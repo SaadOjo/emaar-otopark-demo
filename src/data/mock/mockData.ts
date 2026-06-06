@@ -1,4 +1,4 @@
-import type { DigitalSignage, Floor, MessageTemplate, ParkingBlock, ParkingSpot, StoreRecommendation, Vehicle } from '../../domain/types'
+import type { DigitalSignage, Floor, MessageTemplate, ParkingBlock, ParkingSpot, PaymentActivity, StoreRecommendation, Vehicle } from '../../domain/types'
 
 export const mockFloors: Floor[] = [
   { id: 'floor-0', label: 'Kat 0 (Ground)', shortLabel: 'Floor 00', capacity: 260, occupied: 154 },
@@ -25,37 +25,104 @@ export const mockBlocks: ParkingBlock[] = [
 ]
 
 export const mockVehicles: Vehicle[] = [
-  { id: 'v-a01', plate: '34 ABC 123', brand: 'BMW', model: 'X5', owner: 'Ahmet Y.', tier: 'Standard Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A01', locationLabel: 'Zone A-01, Level -2' },
-  { id: 'v-a03', plate: '34 TES 003', brand: 'Tesla', model: 'Model 3', owner: 'Elif S.', tier: 'EV Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A03', locationLabel: 'Zone A-03, Level -2', isElectric: true, batteryLevel: 82 },
-  { id: 'v-a05', plate: '34 GLC 005', brand: 'Mercedes', model: 'GLC', owner: 'Caner D.', tier: 'Standard Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A05', locationLabel: 'Zone A-05, Level -2' },
-  { id: 'v-a08', plate: '34 AUD 808', brand: 'Audi', model: 'A6', owner: 'Mina K.', tier: 'Premium Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A08', locationLabel: 'Zone A-08, Level -2' },
-  { id: 'v-a11', plate: '34 M4 011', brand: 'BMW', model: 'M4 Competition', owner: 'Julian Sterling', tier: 'Elite Tier Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A11', locationLabel: 'Zone A-11, Level -2' },
+  { id: 'v-a01', plate: '34 ABC 123', brand: 'BMW', model: 'X5', owner: 'Ahmet Y.', tier: 'Standard Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A01', locationLabel: 'A01, Block A, Floor -2' },
+  { id: 'v-a03', plate: '34 TES 003', brand: 'Tesla', model: 'Model 3', owner: 'Elif S.', tier: 'EV Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A03', locationLabel: 'A03, Block A, Floor -2', isElectric: true, batteryLevel: 82 },
+  { id: 'v-a05', plate: '34 GLC 005', brand: 'Mercedes', model: 'GLC', tier: 'Standard Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A05', locationLabel: 'A05, Block A, Floor -2' },
+  { id: 'v-a08', plate: '34 AUD 808', brand: 'Audi', model: 'A6', tier: 'Premium Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A08', locationLabel: 'A08, Block A, Floor -2' },
+  { id: 'v-a11', plate: '34 M4 011', brand: 'BMW', model: 'M4 Competition', owner: 'Julian Sterling', tier: 'Elite Tier Member', floorId: 'floor-b2', blockId: 'block-a', spotId: 'A11', locationLabel: 'A11, Block A, Floor -2' },
+  { id: 'v-b2b01', plate: '34 JEP 101', brand: 'Jeep', model: 'Compass', owner: 'Can B.', tier: 'Standard Member', floorId: 'floor-b2', blockId: 'block-b', spotId: 'B01', locationLabel: 'B01, Block B, Floor -2' },
+  { id: 'v-b2c01', plate: '34 CLA 707', brand: 'Mercedes', model: 'CLA', owner: 'İpek R.', tier: 'Premium Member', floorId: 'floor-b2', blockId: 'block-c', spotId: 'C01', locationLabel: 'C01, Block C, Floor -2' },
+  { id: 'v-d02', plate: '34 TCS 522', brand: 'Hyundai', model: 'Tucson', owner: 'Merve K.', tier: 'Family Member', floorId: 'floor-b2', blockId: 'block-d', spotId: 'D02', locationLabel: 'D02, Block D, Floor -2' },
+  { id: 'v-b2e01', plate: '34 BMW 750', brand: 'BMW', model: '740i', owner: 'Ozan P.', tier: 'VIP Member', floorId: 'floor-b2', blockId: 'block-e', spotId: 'E01', locationLabel: 'E01, Block E, Floor -2' },
+  { id: 'v-b2f01', plate: '34 LEX 450', brand: 'Lexus', model: 'RX 450h', owner: 'Seda U.', tier: 'Premium Member', floorId: 'floor-b2', blockId: 'block-f', spotId: 'F01', locationLabel: 'F01, Block F, Floor -2' },
+  { id: 'v-b1a02', plate: '34 VOL 440', brand: 'Volvo', model: 'XC40', owner: 'Emre D.', tier: 'Premium Member', floorId: 'floor-b1', blockId: 'block-a', spotId: 'A02', locationLabel: 'A02, Block A, Floor -1' },
+  { id: 'v-b1b03', plate: '34 MAC 911', brand: 'Porsche', model: 'Macan', owner: 'Kerem A.', tier: 'Premium Member', floorId: 'floor-b1', blockId: 'block-b', spotId: 'B03', locationLabel: 'B03, Block B, Floor -1' },
+  { id: 'v-b1c04', plate: '34 MIN 717', brand: 'Mini', model: 'Cooper', owner: 'Selin T.', tier: 'Standard Member', floorId: 'floor-b1', blockId: 'block-c', spotId: 'C04', locationLabel: 'C04, Block C, Floor -1' },
+  { id: 'v-b1d01', plate: '34 AUD 515', brand: 'Audi', model: 'Q5', owner: 'Burak Ç.', tier: 'Standard Member', floorId: 'floor-b1', blockId: 'block-d', spotId: 'D01', locationLabel: 'D01, Block D, Floor -1' },
+  { id: 'v-0a03', plate: '34 PEU 284', brand: 'Peugeot', model: '3008', owner: 'Deniz E.', tier: 'Standard Member', floorId: 'floor-0', blockId: 'block-a', spotId: 'A03', locationLabel: 'A03, Block A, Floor 00' },
+  { id: 'v-0b02', plate: '34 EV 220', brand: 'Tesla', model: 'Model Y', owner: 'Ece N.', tier: 'EV Member', floorId: 'floor-0', blockId: 'block-b', spotId: 'B02', locationLabel: 'B02, Block B, Floor 00', isElectric: true, batteryLevel: 68 },
+  { id: 'v-0c02', plate: '34 RR 909', brand: 'Range Rover', model: 'Sport', owner: 'Lara M.', tier: 'VIP Valet Member', floorId: 'floor-0', blockId: 'block-c', spotId: 'C02', locationLabel: 'C02, Valet, Floor 00' },
 ]
 
-export const mockSpots: ParkingSpot[] = Array.from({ length: 12 }, (_, index) => {
-  const number = String(index + 1).padStart(2, '0')
-  const id = `A${number}`
-  const vehicle = mockVehicles.find((item) => item.spotId === id)
-  return {
-    id,
-    floorId: 'floor-b2' as const,
-    blockId: 'block-a',
-    status: vehicle ? 'occupied' as const : 'available' as const,
-    vehicleId: vehicle?.id,
-  }
-})
+export const mockSpots: ParkingSpot[] = [
+  ...createSeededSpots('floor-b2', 'block-a', 'A', 12, {
+    A01: 'v-a01',
+    A03: 'v-a03',
+    A05: 'v-a05',
+    A08: 'v-a08',
+    A11: 'v-a11',
+  }),
+  ...createSeededSpots('floor-b2', 'block-b', 'B', 8, {
+    B01: 'v-b2b01',
+  }),
+  ...createSeededSpots('floor-b2', 'block-c', 'C', 8, {
+    C01: 'v-b2c01',
+  }),
+  ...createSeededSpots('floor-b2', 'block-d', 'D', 8, {
+    D02: 'v-d02',
+  }),
+  ...createSeededSpots('floor-b2', 'block-e', 'E', 8, {
+    E01: 'v-b2e01',
+  }),
+  ...createSeededSpots('floor-b2', 'block-f', 'F', 8, {
+    F01: 'v-b2f01',
+  }),
+  ...createSeededSpots('floor-b1', 'block-a', 'A', 8, {
+    A02: 'v-b1a02',
+  }),
+  ...createSeededSpots('floor-b1', 'block-b', 'B', 10, {
+    B03: 'v-b1b03',
+  }),
+  ...createSeededSpots('floor-b1', 'block-c', 'C', 10, {
+    C04: 'v-b1c04',
+  }),
+  ...createSeededSpots('floor-b1', 'block-d', 'D', 8, {
+    D01: 'v-b1d01',
+  }),
+  ...createSeededSpots('floor-0', 'block-a', 'A', 8, {
+    A03: 'v-0a03',
+  }),
+  ...createSeededSpots('floor-0', 'block-b', 'B', 8, {
+    B02: 'v-0b02',
+  }),
+  ...createSeededSpots('floor-0', 'block-c', 'C', 8, {
+    C02: 'v-0c02',
+  }),
+]
+
+function createSeededSpots(floorId: Vehicle['floorId'], blockId: string, prefix: string, count: number, vehiclesBySpot: Record<string, string>): ParkingSpot[] {
+  return Array.from({ length: count }, (_, index) => {
+    const id = `${prefix}${String(index + 1).padStart(2, '0')}`
+    const vehicleId = vehiclesBySpot[id]
+
+    return {
+      id,
+      floorId,
+      blockId,
+      status: vehicleId ? 'occupied' : 'available',
+      vehicleId,
+    }
+  })
+}
 
 export const mockSignage: DigitalSignage[] = [
-  { id: 'DS-401', floorId: 'floor-0', blockId: 'block-a', location: 'Entrance East A', status: 'online', contentTitle: 'WELCOME', template: 'Standard Welcome (v4.2)', brightness: 85, temperatureC: 32.4, lastSync: '2m ago', x: 244, y: 134, orientation: 'vertical' },
-  { id: 'DS-405', floorId: 'floor-0', blockId: 'block-a', location: 'Kiosk Main', status: 'online', contentTitle: 'STARBUCKS CAMPAIGN', template: 'Partner Campaign (v1.8)', brightness: 78, temperatureC: 31.8, lastSync: '15s ago', x: 484, y: 294, orientation: 'horizontal' },
-  { id: 'DS-410', floorId: 'floor-0', blockId: 'block-c', location: 'Elevator Bank', status: 'offline', contentTitle: 'OFFLINE', template: 'Diagnostics', brightness: 0, temperatureC: 29.1, lastSync: '4h ago', x: 744, y: 134, orientation: 'vertical' },
-  { id: 'DS-501', floorId: 'floor-b1', blockId: 'block-a', location: 'Ramp Down', status: 'online', contentTitle: 'ATASUN CAMPAIGN', template: 'Partner Campaign (v2.0)', brightness: 80, temperatureC: 33.0, lastSync: '4m ago', x: 244, y: 434, orientation: 'vertical' },
-  { id: 'DS-502', floorId: 'floor-b1', blockId: 'block-b', location: 'Central Pillar', status: 'online', contentTitle: 'ADIDAS OFFER', template: 'Retail Offer (v3.1)', brightness: 88, temperatureC: 32.7, lastSync: 'Just now', x: 744, y: 434, orientation: 'vertical' },
-  { id: 'DS-402', floorId: 'floor-b2', blockId: 'block-a', location: 'Block A Entry', status: 'online', contentTitle: 'WELCOME TO EMAAR SQUARE AVM', template: 'Standard Welcome (v4.2)', brightness: 85, temperatureC: 32.4, lastSync: '14:20:05', x: 244, y: 134, orientation: 'vertical' },
-  { id: 'DS-603', floorId: 'floor-b2', blockId: 'block-c', location: 'Center Junction', status: 'online', contentTitle: 'FIND YOUR CAR', template: 'Wayfinding (v2.3)', brightness: 81, temperatureC: 31.2, lastSync: '31s ago', x: 452, y: 132, orientation: 'horizontal' },
-  { id: 'DS-604', floorId: 'floor-b2', blockId: 'block-f', location: 'Exit Portal B', status: 'online', contentTitle: 'VALET SERVICE', template: 'Valet Direction (v1.5)', brightness: 72, temperatureC: 30.2, lastSync: '1h ago', x: 484, y: 294, orientation: 'horizontal' },
-  { id: 'DS-605', floorId: 'floor-b2', blockId: 'block-e', location: 'VIP Corridor', status: 'online', contentTitle: 'VIP ACCESS', template: 'Vip Guidance (v1.1)', brightness: 76, temperatureC: 30.8, lastSync: '2m ago', x: 564, y: 404, orientation: 'vertical' },
-  { id: 'DS-606', floorId: 'floor-b2', blockId: 'block-f', location: 'North Exit Lane', status: 'offline', contentTitle: 'SERVICE CHECK', template: 'Diagnostics', brightness: 0, temperatureC: 28.9, lastSync: '3h ago', x: 824, y: 182, orientation: 'vertical' },
+  { id: 'DS-401', floorId: 'floor-0', blockId: 'block-a', location: 'Entrance East A', status: 'online', contentTitle: 'WELCOME', template: 'Standard Welcome (v4.2)', brightness: 85, temperatureC: 32.4, lastSync: '2m ago', x: 282, y: 146, orientation: 'horizontal', mapOrientation: 'vertical', detailEdge: 'bottom', detailOffset: 28 },
+  { id: 'DS-405', floorId: 'floor-0', blockId: 'block-a', location: 'Kiosk Main', status: 'online', contentTitle: 'STARBUCKS CAMPAIGN', template: 'Partner Campaign (v1.8)', brightness: 78, temperatureC: 31.8, lastSync: '15s ago', x: 214, y: 272, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 60 },
+  { id: 'DS-410', floorId: 'floor-0', blockId: 'block-c', location: 'Elevator Bank', status: 'offline', contentTitle: 'OFFLINE', template: 'Diagnostics', brightness: 0, temperatureC: 29.1, lastSync: '4h ago', x: 598, y: 156, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'left', detailOffset: 16 },
+  { id: 'DS-411', floorId: 'floor-0', blockId: 'block-b', location: 'Ground Central Hall', status: 'online', contentTitle: 'SHOPPING GUIDE', template: 'Wayfinding (v2.4)', brightness: 79, temperatureC: 31.0, lastSync: '48s ago', x: 456, y: 272, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 50 },
+  { id: 'DS-412', floorId: 'floor-0', blockId: 'block-c', location: 'Valet Front Lane', status: 'online', contentTitle: 'VALET CHECK-IN', template: 'Valet Direction (v1.6)', brightness: 82, temperatureC: 31.4, lastSync: '1m ago', x: 598, y: 344, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'left', detailOffset: 48 },
+  { id: 'DS-501', floorId: 'floor-b1', blockId: 'block-a', location: 'Ramp Down', status: 'online', contentTitle: 'ATASUN CAMPAIGN', template: 'Partner Campaign (v2.0)', brightness: 80, temperatureC: 33.0, lastSync: '4m ago', x: 252, y: 244, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'right', detailOffset: 78 },
+  { id: 'DS-502', floorId: 'floor-b1', blockId: 'block-b', location: 'Central Pillar', status: 'online', contentTitle: 'ADIDAS OFFER', template: 'Retail Offer (v3.1)', brightness: 88, temperatureC: 32.7, lastSync: 'Just now', x: 434, y: 282, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 57 },
+  { id: 'DS-503', floorId: 'floor-b1', blockId: 'block-d', location: 'Block D Exit Lane', status: 'online', contentTitle: 'PAYMENT KIOSK', template: 'Wayfinding (v2.1)', brightness: 74, temperatureC: 31.1, lastSync: '52s ago', x: 316, y: 338, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'top', detailOffset: 50 },
+  { id: 'DS-504', floorId: 'floor-b1', blockId: 'block-c', location: 'Block C South Edge', status: 'online', contentTitle: 'FIND YOUR CAR', template: 'Wayfinding (v2.4)', brightness: 77, temperatureC: 30.9, lastSync: '39s ago', x: 722, y: 372, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'right', detailOffset: 66 },
+  { id: 'DS-505', floorId: 'floor-b1', blockId: 'block-b', location: 'Block B North Hall', status: 'online', contentTitle: 'EXIT LEFT', template: 'Direction (v1.9)', brightness: 75, temperatureC: 31.3, lastSync: '2m ago', x: 372, y: 282, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 31 },
+  { id: 'DS-402', floorId: 'floor-b2', blockId: 'block-a', location: 'Block A Entry', status: 'online', contentTitle: 'WELCOME TO EMAAR SQUARE AVM', template: 'Standard Welcome (v4.2)', brightness: 85, temperatureC: 32.4, lastSync: '14:20:05', x: 212, y: 146, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'right', detailOffset: 33 },
+  { id: 'DS-603', floorId: 'floor-b2', blockId: 'block-c', location: 'Center Junction', status: 'online', contentTitle: 'FIND YOUR CAR', template: 'Wayfinding (v2.3)', brightness: 81, temperatureC: 31.2, lastSync: '31s ago', x: 606, y: 272, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 50 },
+  { id: 'DS-604', floorId: 'floor-b2', blockId: 'block-f', location: 'Exit Portal B', status: 'online', contentTitle: 'VALET SERVICE', template: 'Valet Direction (v1.5)', brightness: 72, temperatureC: 30.2, lastSync: '1h ago', x: 788, y: 304, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'left', detailOffset: 51 },
+  { id: 'DS-605', floorId: 'floor-b2', blockId: 'block-e', location: 'VIP Corridor', status: 'online', contentTitle: 'VIP ACCESS', template: 'Vip Guidance (v1.1)', brightness: 76, temperatureC: 30.8, lastSync: '2m ago', x: 460, y: 328, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'top', detailOffset: 41 },
+  { id: 'DS-606', floorId: 'floor-b2', blockId: 'block-f', location: 'North Exit Lane', status: 'offline', contentTitle: 'SERVICE CHECK', template: 'Diagnostics', brightness: 0, temperatureC: 28.9, lastSync: '3h ago', x: 788, y: 176, orientation: 'vertical', mapOrientation: 'vertical', detailEdge: 'left', detailOffset: 22 },
+  { id: 'DS-607', floorId: 'floor-b2', blockId: 'block-b', location: 'Block B North Hall', status: 'online', contentTitle: 'LEVEL -2 GUIDE', template: 'Wayfinding (v2.5)', brightness: 78, temperatureC: 30.7, lastSync: '44s ago', x: 366, y: 272, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 48 },
+  { id: 'DS-608', floorId: 'floor-b2', blockId: 'block-e', location: 'VIP South Exit', status: 'online', contentTitle: 'VIP EXIT', template: 'Vip Guidance (v1.2)', brightness: 80, temperatureC: 31.0, lastSync: '1m ago', x: 560, y: 504, orientation: 'horizontal', mapOrientation: 'horizontal', detailEdge: 'bottom', detailOffset: 64 },
 ]
 
 export const mockMessageTemplates: MessageTemplate[] = [
@@ -63,7 +130,7 @@ export const mockMessageTemplates: MessageTemplate[] = [
     id: 'welcome',
     type: 'Welcome',
     title: 'Visitor Greeting',
-    body: 'Welcome Julian! Hope you have a great shopping experience today.',
+    body: 'Welcome back to Emaar Square AVM. Enjoy your visit today.',
     trigger: 'Default: Auto-Trigger',
     sentAt: '10:45 AM',
     icon: 'welcome',
@@ -72,24 +139,472 @@ export const mockMessageTemplates: MessageTemplate[] = [
     id: 'weekend',
     type: 'Promotion',
     title: 'Weekend Special',
-    body: 'Weekend Special: 20% discount at the food court for parking users!',
+    body: 'Weekend Special: 20% discount at the food court for parking users.',
     trigger: '5 mins after entry',
     sentAt: '11:02 AM',
     icon: 'campaign',
   },
   {
-    id: 'starbucks',
+    id: 'exclusive',
     type: 'Exclusive',
-    title: 'Starbucks Reward',
-    body: 'Exclusive for you: Get a free coffee at Starbucks with your parking ticket.',
-    trigger: 'Partner: Starbucks',
-    sentAt: '11:15 AM',
+    title: 'Store Reward',
+    body: 'A special in-mall reward is ready for this visitor segment.',
+    trigger: 'Partner trigger',
     icon: 'loyalty',
   },
 ]
 
+const vehicleMessageTemplates: Record<string, MessageTemplate[]> = {
+  'v-a01': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Ahmet Greeting',
+      body: 'Welcome Ahmet. Hope your visit at Emaar Square AVM goes smoothly today.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:12 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Food Court Lunch Offer',
+      body: 'A lunch-time meal offer has been sent for the food court valid until 2 PM today.',
+      trigger: '12 mins after entry',
+      sentAt: '10:24 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Atasun Optik Reward',
+      body: 'Enjoy 20% off selected sunglasses at Atasun Optik today with your mall membership.',
+      trigger: 'When entering Ground Floor retail zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-a03': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Elif Greeting',
+      body: 'Welcome Elif. Your visit has been recognized and your member journey is active.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:31 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Starbucks Break Reward',
+      body: 'A free tall coffee reward from Starbucks has been delivered for your visit today.',
+      trigger: '8 mins after entry',
+      sentAt: '10:39 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Adidas Member Drop',
+      body: 'Unlock 15% off selected performance shoes at Adidas during this parking session.',
+      trigger: 'When visitor stays longer than 45 mins',
+      icon: 'loyalty',
+    },
+  ],
+  'v-a11': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Julian Greeting',
+      body: 'Welcome back Julian. Your premium member journey has started at Emaar Square AVM.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:45 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'VIP Lounge Invitation',
+      body: 'A premium refreshment invitation has been sent for the lounge zone near valet access.',
+      trigger: '15 mins after entry',
+      sentAt: '11:02 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Harvey Nichols Private Offer',
+      body: 'A private shopping benefit is ready at Harvey Nichols for your active member profile today.',
+      trigger: 'When entering luxury retail corridor',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b2b01': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Can Greeting',
+      body: 'Welcome Can. Your parking-linked member session is active at Emaar Square AVM.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '09:46 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Mudo Weekend Reward',
+      body: 'A lifestyle shopping reward from Mudo has been sent for your visit today.',
+      trigger: '11 mins after entry',
+      sentAt: '09:57 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Vakko Access Benefit',
+      body: 'Unlock a same-day member benefit on selected Vakko items during this visit.',
+      trigger: 'When entering premium fashion zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b2c01': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'İpek Greeting',
+      body: 'Welcome İpek. Your premium member visit has been recognized.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '09:52 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Sephora Beauty Reward',
+      body: 'A Sephora reward has been sent for selected beauty purchases today.',
+      trigger: '9 mins after entry',
+      sentAt: '10:01 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'MAC Member Gift',
+      body: 'Receive a same-day gift benefit at MAC with qualifying purchases.',
+      trigger: 'When entering beauty zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-d02': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Merve Greeting',
+      body: 'Welcome Merve. Your family visit at Emaar Square AVM has started.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '09:58 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Toyzz Shop Family Offer',
+      body: 'A family shopping offer from Toyzz Shop has been sent for today only.',
+      trigger: '10 mins after entry',
+      sentAt: '10:08 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'D&R Kids Activity Reward',
+      body: 'Receive a bonus kids activity gift with selected purchases at D&R this afternoon.',
+      trigger: 'When entering family retail zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b2e01': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Ozan Greeting',
+      body: 'Welcome back Ozan. Your VIP parking experience is active.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:04 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Harvey Nichols VIP Reward',
+      body: 'A premium fashion benefit from Harvey Nichols has been sent for today.',
+      trigger: '6 mins after entry',
+      sentAt: '10:10 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Beymen Private Access',
+      body: 'A same-day private shopping benefit is waiting at Beymen for your visit.',
+      trigger: 'When entering luxury retail corridor',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b2f01': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Seda Greeting',
+      body: 'Welcome Seda. Your premium member session has started.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:14 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Midpoint Dining Offer',
+      body: 'A dining reward from Midpoint has been sent for your current visit.',
+      trigger: '13 mins after entry',
+      sentAt: '10:27 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Teknosa Premium Reward',
+      body: 'Unlock a same-day accessory benefit at Teknosa on selected products.',
+      trigger: 'When entering electronics zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b1a02': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Emre Greeting',
+      body: 'Welcome back Emre. Your member profile has been recognized in the parking system.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:06 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Mudo Concept Reward',
+      body: 'A home and lifestyle offer from Mudo Concept has been delivered to your session.',
+      trigger: '14 mins after entry',
+      sentAt: '10:20 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Beymen Select Access',
+      body: 'Unlock a same-day styling benefit on selected pieces at Beymen during this visit.',
+      trigger: 'When entering premium retail corridor',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b1b03': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Kerem Greeting',
+      body: 'Welcome Kerem. Your premium parking-linked journey is active.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:18 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Adidas Performance Reward',
+      body: 'A performance collection offer from Adidas has already been sent to you.',
+      trigger: '7 mins after entry',
+      sentAt: '10:25 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Nike Member Access',
+      body: 'Access a limited same-day sneaker offer at Nike once you enter the sportswear zone.',
+      trigger: 'When entering sportswear corridor',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b1c04': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Selin Greeting',
+      body: 'Welcome Selin. Have a pleasant shopping experience today at Emaar Square AVM.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:27 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Sephora Beauty Pick',
+      body: 'A beauty reward from Sephora has been sent for selected products today.',
+      trigger: '9 mins after entry',
+      sentAt: '10:36 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'MAC Studio Offer',
+      body: 'Unlock a same-day gift benefit at MAC with qualifying cosmetic purchases.',
+      trigger: 'When entering beauty zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-b1d01': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Burak Greeting',
+      body: 'Welcome Burak. Your member visit is now active in the parking system.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:33 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'D&R Weekend Reward',
+      body: 'A D&R reward has been sent for selected books and gifts today.',
+      trigger: '10 mins after entry',
+      sentAt: '10:43 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Boyner Member Pass',
+      body: 'Receive a same-day style benefit at Boyner on selected seasonal items.',
+      trigger: 'When entering department store zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-0a03': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Deniz Greeting',
+      body: 'Welcome Deniz. Your visit has started and your member journey is active.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:41 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Starbucks Coffee Break',
+      body: 'A quick break reward from Starbucks has been sent for this visit.',
+      trigger: '6 mins after entry',
+      sentAt: '10:47 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Zara New Season Pass',
+      body: 'Receive a same-day style benefit on selected new season items at Zara.',
+      trigger: 'When entering fashion retail zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-0b02': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Ece Greeting',
+      body: 'Welcome Ece. Your EV member profile has been recognized.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '10:52 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Midpoint Dining Reward',
+      body: 'A dining reward from Midpoint has been sent for lunch hours today.',
+      trigger: '11 mins after entry',
+      sentAt: '11:03 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Teknosa Smart Tech Offer',
+      body: 'Unlock a same-day accessory reward at Teknosa on selected smart devices.',
+      trigger: 'When entering electronics zone',
+      icon: 'loyalty',
+    },
+  ],
+  'v-0c02': [
+    {
+      id: 'welcome',
+      type: 'Welcome',
+      title: 'Lara Greeting',
+      body: 'Welcome back Lara. Your VIP valet journey is ready.',
+      trigger: 'Default: Auto-Trigger',
+      sentAt: '11:06 AM',
+      icon: 'welcome',
+    },
+    {
+      id: 'weekend',
+      type: 'Promotion',
+      title: 'Vakko Lounge Invitation',
+      body: 'A premium refreshment and styling invitation from Vakko has been sent to your profile.',
+      trigger: '5 mins after valet check-in',
+      sentAt: '11:11 AM',
+      icon: 'campaign',
+    },
+    {
+      id: 'exclusive',
+      type: 'Exclusive',
+      title: 'Beymen Private Session',
+      body: 'A same-day private shopping benefit is waiting at Beymen for your visit today.',
+      trigger: 'When entering luxury retail corridor',
+      icon: 'loyalty',
+    },
+  ],
+}
+
+export function getMockMessageTemplates(vehicleId?: string): MessageTemplate[] {
+  if (!vehicleId) return mockMessageTemplates
+  return vehicleMessageTemplates[vehicleId] ?? mockMessageTemplates
+}
+
 export const mockRecommendations: StoreRecommendation[] = [
   { id: 'starbucks', storeName: 'Starbucks', floorLabel: 'Kat -2', blockLabel: 'Blok A', spotLabel: 'Nokta 11', closest: true, icon: 'coffee' },
-  { id: 'adidas', storeName: 'Adidas', floorLabel: 'Kat 1', blockLabel: 'Blok A', spotLabel: 'Nokta 10', icon: 'apparel' },
-  { id: 'atasun', storeName: 'Atasun Optik', floorLabel: 'Kat 0', blockLabel: 'Blok A', spotLabel: 'Nokta 11', icon: 'visibility' },
+  { id: 'adidas', storeName: 'Adidas', floorLabel: 'Kat -1', blockLabel: 'Blok B', spotLabel: 'Nokta 10', icon: 'apparel' },
+  { id: 'atasun', storeName: 'Atasun Optik', floorLabel: 'Kat 00', blockLabel: 'Blok A', spotLabel: 'Nokta 11', icon: 'visibility' },
+]
+
+export const mockPaymentActivities: PaymentActivity[] = [
+  { id: 'pay-1001', vehicleModel: 'BMW X5', plate: '34 ABC 123', channel: 'mobile-app', amount: 320, paidAt: '17:42' },
+  { id: 'pay-1002', vehicleModel: 'Tesla Model 3', plate: '34 TES 003', channel: 'kiosk-card', amount: 380, paidAt: '17:37' },
+  { id: 'pay-1003', vehicleModel: 'Mercedes GLC', plate: '34 GLC 005', channel: 'mobile-app', amount: 295, paidAt: '17:31' },
+  { id: 'pay-1004', vehicleModel: 'Audi A6', plate: '34 AUD 808', channel: 'kiosk-qr', amount: 340, paidAt: '17:18' },
+  { id: 'pay-1005', vehicleModel: 'BMW M4 Competition', plate: '34 M4 011', channel: 'mobile-app', amount: 420, paidAt: '17:03' },
+  { id: 'pay-1006', vehicleModel: 'Volkswagen Tiguan', plate: '34 VWT 617', channel: 'mobile-app', amount: 260, paidAt: '16:55' },
+  { id: 'pay-1007', vehicleModel: 'Peugeot 3008', plate: '34 PEU 284', channel: 'kiosk-card', amount: 255, paidAt: '16:41' },
+  { id: 'pay-1008', vehicleModel: 'Range Rover Evoque', plate: '34 RR 909', channel: 'mobile-app', amount: 410, paidAt: '16:28' },
+  { id: 'pay-1009', vehicleModel: 'Toyota Corolla', plate: '34 COR 410', channel: 'kiosk-qr', amount: 210, paidAt: '16:10' },
+  { id: 'pay-1010', vehicleModel: 'Hyundai Tucson', plate: '34 TCS 522', channel: 'mobile-app', amount: 275, paidAt: '15:54' },
+  { id: 'pay-1011', vehicleModel: 'Porsche Macan', plate: '34 MAC 911', channel: 'mobile-app', amount: 395, paidAt: '15:42' },
+  { id: 'pay-1012', vehicleModel: 'Volvo XC40', plate: '34 VOL 440', channel: 'kiosk-qr', amount: 285, paidAt: '15:27' },
+  { id: 'pay-1013', vehicleModel: 'Mini Cooper', plate: '34 MIN 717', channel: 'mobile-app', amount: 240, paidAt: '15:13' },
+  { id: 'pay-1014', vehicleModel: 'Tesla Model Y', plate: '34 EV 220', channel: 'mobile-app', amount: 360, paidAt: '14:58' },
+  { id: 'pay-1015', vehicleModel: 'Jeep Compass', plate: '34 JEP 101', channel: 'kiosk-qr', amount: 265, paidAt: '14:46' },
+  { id: 'pay-1016', vehicleModel: 'BMW 740i', plate: '34 BMW 750', channel: 'mobile-app', amount: 430, paidAt: '14:29' },
+  { id: 'pay-1017', vehicleModel: 'Lexus RX 450h', plate: '34 LEX 450', channel: 'mobile-app', amount: 390, paidAt: '14:14' },
+  { id: 'pay-1018', vehicleModel: 'Audi Q5', plate: '34 AUD 515', channel: 'kiosk-card', amount: 300, paidAt: '13:58' },
 ]

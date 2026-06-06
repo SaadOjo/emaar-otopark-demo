@@ -32,7 +32,7 @@ export interface Vehicle {
   plate: string
   brand: string
   model: string
-  owner: string
+  owner?: string
   tier: string
   floorId: FloorId
   blockId: string
@@ -64,6 +64,9 @@ export interface DigitalSignage {
   x?: number
   y?: number
   orientation?: 'horizontal' | 'vertical'
+  mapOrientation?: 'horizontal' | 'vertical'
+  detailEdge?: 'top' | 'bottom' | 'left' | 'right'
+  detailOffset?: number
 }
 
 export interface MessageTemplate {
@@ -84,4 +87,15 @@ export interface StoreRecommendation {
   spotLabel: string
   closest?: boolean
   icon: 'coffee' | 'apparel' | 'visibility'
+}
+
+export type PaymentChannel = 'mobile-app' | 'kiosk-card' | 'kiosk-qr'
+
+export interface PaymentActivity {
+  id: string
+  vehicleModel: string
+  plate: string
+  channel: PaymentChannel
+  amount: number
+  paidAt: string
 }
