@@ -754,6 +754,41 @@ button { color: inherit; }
 
 /* Driver navigation */
 .driver-navigation-page { height: 100vh; overflow: hidden; background: #0f0c09; display: flex; }
+.driver-navigation-mode-shell { position: relative; min-height: 100vh; }
+.driver-navigation-mode-toggle {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  z-index: 12;
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px;
+  background: rgba(14,16,18,.78);
+  box-shadow: 0 14px 34px rgba(0,0,0,.26);
+  translate: -50% 0;
+  backdrop-filter: blur(14px);
+}
+.driver-navigation-mode-toggle button {
+  width: 72px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255,255,255,.72);
+  cursor: pointer;
+  font: 800 12px var(--font-mono);
+  letter-spacing: 0;
+}
+.driver-navigation-mode-toggle button.is-active {
+  background: var(--primary);
+  color: var(--on-primary);
+}
 .navigation-map-shell { flex: 1; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at top, #241d17 0, #0f0c09 72%); }
 .navigation-map { position: relative; width: min(100%, 1280px); height: min(84vh, 780px); border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
 .navigation-map--maps { background: linear-gradient(180deg, #2c241d, #16120f); border: 1px solid rgba(214,179,106,.12); }
